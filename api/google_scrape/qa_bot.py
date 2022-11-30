@@ -2,11 +2,10 @@ from typing import List
 
 from api.google_scrape.search_bot import SearchBot
 from api.qa_dummy import QADummy
-from utils.units import Seconds
 
 
 class QABot(QADummy):
-    def __init__(self, request_delay: Seconds = 1) -> None:
+    def __init__(self, request_delay: int = 1) -> None:
         self._name = "Google QA-Bot"
         self.search_bot = SearchBot(request_delay)
 
