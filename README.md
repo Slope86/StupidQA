@@ -9,7 +9,7 @@
 * **命令列工具( 環境需安裝有 Python 3.10 或 以上)**
 
   ```cmd
-  git clone https://github.com/Slope86/StupidQA.git
+  git clone --depth=1 https://github.com/Slope86/StupidQA.git
   pip install -r StupidQA/requirements.txt
   python StupidQA
   ```
