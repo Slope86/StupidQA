@@ -1,0 +1,5 @@
+fp>=0.2
+free_proxy>=1.1.0
+magic_google>=0.2.9
+pandas>=1.5.1
+udicOpenData>=2.4
