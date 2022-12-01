@@ -1,4 +1,5 @@
 import importlib.resources as pkg_resources
+import json
 import time
 import tkinter as tk
 from os import path
@@ -71,6 +72,9 @@ class QADummy:
 
         num_answer: List[int] = [self.get_answer(single_QA) for single_QA in QA_list]
         alpha_answer: List[str] = [NumAlphaConvert(num) for num in num_answer]  # type: ignore
+
+        with open("answer.json", "w", encoding="utf-8") as file:
+            json.dump(alpha_answer, file, ensure_ascii=False, indent=None)
 
         print("\nAnswer:")
         print('["' + '","'.join(alpha_answer) + '"]')
