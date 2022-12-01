@@ -35,7 +35,7 @@ def main() -> None:
                     return wikiBot
                 case "2":
                     return googleBot
-            print("未知指令! 請輸入Bot號碼:1~2")
+            print("未知指令! 請輸入Bot編號:1~2")
 
     qa_bot = choose_bot()
 
@@ -87,7 +87,7 @@ def main() -> None:
                 break
 
             case _:
-                print("未知指令! 請輸入指令號碼:1~4")
+                print("未知指令! 請輸入指令編號:1~5")
 
 
 if __name__ == "__main__":
