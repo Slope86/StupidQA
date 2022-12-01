@@ -21,7 +21,7 @@
 ## **如何輸入題目**
 
 * 直接於命令列輸入題目與選項
-* 以Json檔輸入，範例：
+* 以Json檔輸入，[範例](https://github.com/Slope86/StupidQA/blob/master/data/questions_example_2.json)：
 
 ```json
 [
