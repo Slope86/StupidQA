@@ -2,6 +2,7 @@ import importlib.resources as pkg_resources
 import json
 import time
 import tkinter as tk
+from datetime import datetime
 from os import path
 from pathlib import Path
 from tkinter import filedialog
@@ -20,7 +21,7 @@ class QADummy:
     def __str__(self):
         return self._name
 
-    def get_answer(self, QA: List[str]) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
         """Try to answer the input question
 
         Args:
@@ -30,7 +31,8 @@ class QADummy:
             int: answer number, range = 1 ~ N (N: total number of option)
         """
         answer = 3  # 猜C就對了
-        print(f"Q:{QA[0]}\nA:{QA[answer]}\n")
+        if print_result:
+            print(f"Q:{QA[0]}\nA:{QA[answer]}\n")
         return answer
 
     def answer_from_json(self, file_path: str | Path = "") -> List[str]:
@@ -60,20 +62,34 @@ class QADummy:
             Return answer:
                 ["A","C"]
         """
-        if not path.exists(file_path):
+        if path.exists(file_path):
+            QA_df: pd.DataFrame = pd.read_json(file_path)
+        else:
             print("請選取QA Json檔...")
             file_selector = tk.Tk()
             file_selector.title("File select")
-            file_path = filedialog.askopenfilename(title="請選取QA Json檔(.json)", filetypes=(("json file", "*.json"),))
+            while 1:
+                try:
+                    file_path = filedialog.askopenfilename(
+                        title="請選取QA Json檔(.json)", filetypes=(("json file", "*.json"),)
+                    )
+                    QA_df: pd.DataFrame = pd.read_json(file_path)
+                    break
+                except ValueError:
+                    if input("讀取檔案失敗，是否要重新選取？(y/n)") == "y":
+                        continue
+                    else:
+                        return []
             file_selector.destroy()
 
-        QA_df: pd.DataFrame = pd.read_json(file_path)
-        QA_list: List[list] = [QA_tuple[1].tolist() for QA_tuple in QA_df.iterrows()]
+        QA_list: List[list] = [QA_tuple[1].tolist() for QA_tuple in QA_df.iterrows()]  # type: ignore
 
-        num_answer: List[int] = [self.get_answer(single_QA) for single_QA in QA_list]
+        num_answer: List[int] = [self.get_answer(single_QA, print_result=True) for single_QA in QA_list]
         alpha_answer: List[str] = [NumAlphaConvert(num) for num in num_answer]  # type: ignore
 
-        with open("answer.json", "w", encoding="utf-8") as file:
+        log_date = datetime.now().strftime("%Y-%m-%d_%H%M")
+        log_file_name = f"Answer {log_date}.json"
+        with open(log_file_name, "w", encoding="utf-8") as file:
             json.dump(alpha_answer, file, ensure_ascii=False, indent=None)
 
         print("\nAnswer:")

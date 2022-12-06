@@ -11,7 +11,7 @@ class QABot(QADummy):
         self._wiki = Analyzer()
         Line2Words("Initialize")
 
-    def get_answer(self, QA: List[str]) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
         """Answer the input question based on Wikipedia article
 
         Args:
@@ -34,7 +34,8 @@ class QABot(QADummy):
                     break  # use next method to get answer
                 answer = i
         else:
-            print(f"Q: {QA[0]}\nA: {QA[answer]}\n")
+            if print_result:
+                print(f"Q: {QA[0]}\nA: {QA[answer]}\n")
             return answer
 
         # Get answer by compare the relation between option & question in Wikipedia articles
@@ -43,11 +44,12 @@ class QABot(QADummy):
         for i, option in enumerate(QA[1:], start=1):
             score = self.related_score(QA[0], option)
             # print(f'{10*score:4.2f}',end=', ')
-            if score > max_score:
+            if score >= max_score:
                 answer = i
                 max_score = score
 
-        print(f"Q:{QA[0]}\nA:{QA[answer]}\n")
+        if print_result:
+            print(f"Q:{QA[0]}\nA:{QA[answer]}\n")
         return answer
 
     def related_score(self, line1: str, line2: str) -> float:

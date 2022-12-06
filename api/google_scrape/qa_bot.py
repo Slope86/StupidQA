@@ -9,7 +9,7 @@ class QABot(QADummy):
         self._name = "Google QA-Bot"
         self.search_bot = SearchBot(request_delay)
 
-    def get_answer(self, QA: List[str]) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
         """Answer the input question based on google search result
 
         Args:
@@ -34,5 +34,6 @@ class QABot(QADummy):
                     scores[i] -= tmp_scores[j]
 
         answer = scores.index(max(scores)) + 1  # +1 because : A=1, B=2, C=3, ...
-        print(f"Q: {QA[0]}\nA: {QA[answer]}\n")
+        if print_result:
+            print(f"Q: {QA[0]}\nA: {QA[answer]}\n")
         return answer

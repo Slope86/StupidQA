@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from api import google_scrape, wiki_data
+from api import google_scrape, human_assist, wiki_data
 
 
 def main() -> None:
@@ -15,13 +15,14 @@ def main() -> None:
         (5) Exit!: Exit the program.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--delay", default=1, type=int, help="Delay between Google search requests, default = 1")
+    parser.add_argument("-d", "--delay", default=0, type=int, help="Delay between Google search requests, default = 0")
     args = parser.parse_args()
 
     wikiBot = wiki_data.QABot()
     googleBot = google_scrape.QABot(request_delay=args.delay)
+    humanAssist = human_assist.QABot(wikiBot, googleBot)
 
-    def choose_bot() -> wiki_data.QABot | google_scrape.QABot:  # type: ignore
+    def choose_bot() -> wiki_data.QABot | google_scrape.QABot | human_assist.QABot:  # type: ignore
         """Let user choose which bot to use.
 
         Returns:
@@ -29,13 +30,15 @@ def main() -> None:
         """
         while 1:
             print(f'\n{"Bot Select":-^34}')
-            print(f"(1) {wikiBot}  (2) {googleBot}")
+            print(f"(1) {wikiBot}  (2) {googleBot} (3) {humanAssist}")
             match input("請輸入要呼叫的Bot: "):
                 case "1":
                     return wikiBot
                 case "2":
                     return googleBot
-            print("未知指令! 請輸入Bot編號:1~2")
+                case "3":
+                    return humanAssist
+            print("未知指令! 請輸入Bot編號:1~3")
 
     qa_bot = choose_bot()
 
@@ -71,7 +74,7 @@ def main() -> None:
                     else:
                         print("請輸入至少一個選項")
                 print()
-                qa_bot.get_answer(QA_list)
+                qa_bot.get_answer(QA_list, print_result=True)
 
             case "3":
                 # (3) Test QA-Bot
