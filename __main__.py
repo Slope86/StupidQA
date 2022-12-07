@@ -1,7 +1,7 @@
 import argparse
 from typing import List
 
-from api import google_scrape, human_assist, wiki_data
+from api import google_scrape, human_assist, qa_dummy, wiki_data
 
 
 def main() -> None:
@@ -22,28 +22,27 @@ def main() -> None:
     googleBot = google_scrape.QABot(request_delay=args.delay)
     humanAssist = human_assist.QABot(wikiBot, googleBot)
 
-    def choose_bot() -> wiki_data.QABot | google_scrape.QABot | human_assist.QABot:  # type: ignore
-        """Let user choose which bot to use.
-
-        Returns:
-            wiki_data.QABot | google_scrape.QABot: The bot to use.
-        """
-        while 1:
-            print(f'\n{"Bot Select":-^34}')
-            print(f"(1) {wikiBot}  (2) {googleBot} (3) {humanAssist}")
-            match input("請輸入要呼叫的Bot: "):
-                case "1":
-                    return wikiBot
-                case "2":
-                    return googleBot
-                case "3":
-                    return humanAssist
-            print("未知指令! 請輸入Bot編號:1~3")
-
-    qa_bot = choose_bot()
-
+    bot_center = BotCenter(wikiBot, googleBot, humanAssist)
     while 1:
-        print(f'\n{f"{qa_bot} is ready":-^34}')
+        try:
+            bot_center.QA_loop()
+        except KeyboardInterrupt:
+            print("Exit!")
+            return
+        except Exception as e:
+            if e.args[0] == "Google search error":
+                bot_center.choose_bot()
+            else:
+                raise e
+
+
+class BotCenter:
+    def __init__(self, *bots: qa_dummy.QADummy) -> None:
+        self.qa_bots = bots
+        self.choose_bot()
+
+    def QA_loop(self) -> None:
+        print(f'\n{f"{self.active_qa_bot} is ready":-^34}')
         print(
             "(1) Feed QA-Bot a json file\n"
             "(2) Ask QA-Bot a question\n"
@@ -51,12 +50,10 @@ def main() -> None:
             "(4) Change QA-Bot\n"
             "(5) Exit! "
         )
-
         match input("請輸入要執行的操作: "):
             case "1":
                 # (1) Feed QA-Bot a json file
-                qa_bot.answer_from_json()
-
+                self.active_qa_bot.answer_from_json()
             case "2":
                 # (2) Ask QA-Bot a question
                 QA_list: List[str] = []
@@ -74,23 +71,32 @@ def main() -> None:
                     else:
                         print("請輸入至少一個選項")
                 print()
-                qa_bot.get_answer(QA_list, print_result=True)
-
+                self.active_qa_bot.get_answer(QA_list, print_result=True)
             case "3":
                 # (3) Test QA-Bot
-                qa_bot.performance_test()
-
+                self.active_qa_bot.performance_test()
             case "4":
                 # (4) Change QA-Bot
-                qa_bot = choose_bot()
-
+                self.choose_bot()
             case "5":
                 # (5) Exit!
-                print("Exit!")
-                break
-
+                raise KeyboardInterrupt
             case _:
                 print("未知指令! 請輸入指令編號:1~5")
+
+    def choose_bot(self) -> None:  # type: ignore
+        """Let user choose which bot to use."""
+        while 1:
+            print(f'\n{"Bot Select":-^34}')
+            for i, bot in enumerate(self.qa_bots):
+                print(f"({i + 1}) {bot}")
+            bot_id = input("請輸入要呼叫的Bot: ")
+            if bot_id.isdigit():
+                bot_id = int(bot_id)
+                if 1 <= bot_id <= len(self.qa_bots):
+                    self.active_qa_bot = self.qa_bots[bot_id - 1]
+                    return
+            print("未知指令! 請輸入Bot編號:1~3")
 
 
 if __name__ == "__main__":
