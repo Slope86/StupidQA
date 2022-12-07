@@ -14,18 +14,23 @@ def main() -> None:
         (4) Change QA-Bot: Choose which QA-Bot to use.
         (5) Exit!: Exit the program.
     """
+    # Parse command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--delay", default=1, type=int, help="Delay between Google search requests, default = 1")
     args = parser.parse_args()
 
+    # Initialize QA-Bots
     wikiBot = wiki_data.QABot()
     googleBot = google_scrape.QABot(request_delay=args.delay)
     humanAssist = human_assist.QABot(wikiBot, googleBot)
 
+    # Initialize BotCenter
     bot_center = BotCenter(wikiBot, googleBot, humanAssist)
+
+    # Main loop
     while 1:
         try:
-            bot_center.QA_loop()
+            bot_center.start_QA()
         except KeyboardInterrupt:
             print("Exit!")
             return
@@ -37,11 +42,18 @@ def main() -> None:
 
 
 class BotCenter:
+    """A class to manage QA-Bots"""
+
     def __init__(self, *bots: qa_dummy.QADummy) -> None:
         self.qa_bots = bots
         self.choose_bot()
 
-    def QA_loop(self) -> None:
+    def start_QA(self) -> None:
+        """Let user choose which operation they want QA-Bot to do.
+
+        Raises:
+            KeyboardInterrupt: User choose to exit.
+        """
         print(f'\n{f"{self.active_qa_bot} is ready":-^34}')
         print(
             "(1) Feed QA-Bot a json file\n"
