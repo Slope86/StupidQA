@@ -15,7 +15,7 @@ def main() -> None:
         (5) Exit!: Exit the program.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--delay", default=0, type=int, help="Delay between Google search requests, default = 0")
+    parser.add_argument("-d", "--delay", default=1, type=int, help="Delay between Google search requests, default = 1")
     args = parser.parse_args()
 
     wikiBot = wiki_data.QABot()
