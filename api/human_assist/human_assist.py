@@ -41,16 +41,16 @@ class QABot(QADummy):
             )
             unknown_answer = input("請輸答案: ")
             try:
-                answer_human = int(unknown_answer)
-            except ValueError:
-                try:
+                if unknown_answer.isnumeric():
+                    answer_human = int(unknown_answer)
+                else:
                     answer_human = num_alpha_convert.Alpha2Num(unknown_answer)
-                except ValueError:
-                    print("Please enter an alphabet or number\n")
-                    continue
+            except ValueError:
+                print("請輸入選項A B C... or 1 2 3 ...\n")
+                continue
             if 1 <= answer_human <= len(QA) - 1:
                 print("")
                 break
-            print(f"Please enter a number between 1 and {len(QA) - 1}\n")
+            print(f"無選項({num_alpha_convert.Num2Alpha(answer_human)}). 請重新輸入\n")
 
         return answer_human

@@ -27,7 +27,7 @@ class SearchBot(MagicGoogle):
             except FreeProxyException:
                 get_proxy_fail_count += 1
                 if get_proxy_fail_count == 3:
-                    input("無法取得代理伺服器, Google QA-Bot可能無法正常運作, 按Enter以繼續")
+                    input("無法取得代理伺服器, Google QA-Bot可能無法正常運作(按enter鍵繼續)")
                     return None
                 time.sleep(self.request_delay)
 

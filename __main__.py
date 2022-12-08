@@ -96,7 +96,7 @@ class BotCenter:
             case _:
                 print("未知指令! 請輸入指令編號:1~5")
 
-    def choose_bot(self) -> None:  # type: ignore
+    def choose_bot(self) -> None:
         """Let user choose which bot to use."""
         while 1:
             print(f'\n{"Bot Select":-^34}')
@@ -111,5 +111,5 @@ class BotCenter:
             print("未知指令! 請輸入Bot編號:1~3")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # type: ignore
     main()
