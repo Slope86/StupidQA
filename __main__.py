@@ -26,8 +26,15 @@ def main() -> None:
         try:
             bot_center.start_QA()
         except KeyboardInterrupt:
-            print("Exit!")
-            return
+            if input("\n結束程式? (y/n): ") == "y":
+                print("Exit!")
+                return
+        except SystemExit as e:
+            if e.args[0] == "exit":
+                print("Exit!")
+                return
+            else:
+                raise e
         except Exception as e:
             if e.args[0] == "Google search error":
                 bot_center.choose_bot()
@@ -86,7 +93,7 @@ class BotCenter:
                 self.choose_bot()
             case "5":
                 # (5) Exit!
-                raise KeyboardInterrupt
+                raise SystemExit("exit")
             case _:
                 print("未知指令! 請輸入指令編號:1~5")
 
