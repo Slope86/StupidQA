@@ -16,7 +16,7 @@
 
 * **已編譯的執行檔**
 
-  [StupidQA.exe](https://github.com/Slope86/StupidQA/releases)
+  [StupidQA.exe](https://github.com/Slope86/StupidQA/releases/latest)
 
 ## **如何輸入題目**
 
