@@ -14,7 +14,8 @@ class SearchBot(MagicGoogle):
         self.request_delay = request_delay
         self.proxies = self.get_proxy()
 
-    def get_proxy(self) -> dict[str, str] | None:
+    @staticmethod
+    def get_proxy() -> dict[str, str] | None:
         """Get a random proxy from https://free-proxy-list.net/
 
         Returns:
@@ -31,7 +32,7 @@ class SearchBot(MagicGoogle):
                 if get_proxy_fail_count == 3:
                     input("無法取得代理伺服器, Google QA-Bot可能無法正常運作(按enter鍵繼續)")
                     return None
-                time.sleep(self.request_delay)
+                time.sleep(1)
 
         proxy = str(proxy)
         protocol = "https" if proxy.startswith("https") else "http"

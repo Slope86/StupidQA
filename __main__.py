@@ -101,8 +101,8 @@ class BotCenter:
         """Let user choose which bot to use."""
         while 1:
             print(f'\n{"Bot Select":-^34}')
-            for i, bot in enumerate(self.qa_bots):
-                print(f"({i + 1}) {bot}")
+            for i, bot in enumerate(self.qa_bots, start=1):
+                print(f"({i}) {bot}")
             bot_id = input("請輸入要呼叫的Bot: ")
             if bot_id.isdigit():
                 bot_id = int(bot_id)
