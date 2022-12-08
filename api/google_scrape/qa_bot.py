@@ -2,18 +2,20 @@ from typing import List
 
 from api.google_scrape.search_bot import SearchBot
 from api.qa_dummy import QADummy
+from argument import Argument
 
 
 class QABot(QADummy):
-    def __init__(self, request_delay: int = 1) -> None:
+    def __init__(self) -> None:
         self._name = "Google QA-Bot"
-        self.search_bot = SearchBot(request_delay)
+        self.search_bot = SearchBot()
 
-    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = Argument().print) -> int:
         """Answer the input question based on google search result
 
         Args:
             QA (List[str]): ["Question", "Option0", "Option1", "Option2", .... , "OptionN"]
+            print_result(bool, optional): print the Question and Answer
 
         Returns:
             int: answer number, range = 1 ~ N (N: total number of option)

@@ -1,4 +1,3 @@
-import argparse
 from typing import List
 
 from api import google_scrape, human_assist, qa_dummy, wiki_data
@@ -14,14 +13,9 @@ def main() -> None:
         (4) Change QA-Bot: Choose which QA-Bot to use.
         (5) Exit!: Exit the program.
     """
-    # Parse command line arguments
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--delay", default=1, type=int, help="Delay between Google search requests, default = 1")
-    args = parser.parse_args()
-
     # Initialize QA-Bots
     wikiBot = wiki_data.QABot()
-    googleBot = google_scrape.QABot(request_delay=args.delay)
+    googleBot = google_scrape.QABot()
     humanAssist = human_assist.QABot(wikiBot, googleBot)
 
     # Initialize BotCenter

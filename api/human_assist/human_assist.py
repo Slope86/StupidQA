@@ -1,6 +1,7 @@
 from typing import List
 
 from api.qa_dummy import QADummy
+from argument import Argument
 from utils import num_alpha_convert
 from utils.my_thread import MyThread
 
@@ -11,16 +12,17 @@ class QABot(QADummy):
         self.wikiBot = wiki_bot
         self.googleBot = google_bot
 
-    def get_answer(self, QA: List[str], print_result: bool = False) -> int:  # type: ignore
+    def get_answer(self, QA: List[str], print_result: bool = Argument().print) -> int:  # type: ignore
         """Answer the input question based on google search result
 
         Args:
             QA (List[str]): ["Question", "Option0", "Option1", "Option2", .... , "OptionN"]
+            print_result(bool, optional): print the Question and Answer
 
         Returns:
             int: answer number, range = 1 ~ N (N: total number of option)
         """
-        thread_wiki = MyThread(target=self.wikiBot.get_answer, args=(QA,))
+        thread_wiki = MyThread(target=self.wikiBot.get_answer, args=(QA, False))
         thread_google = MyThread(target=self.googleBot.get_answer, args=(QA, print_result))
         thread_wiki.start()
         thread_google.start()
@@ -35,10 +37,7 @@ class QABot(QADummy):
             print(f"{QA[0]}")
             for i in range(1, len(QA)):
                 print(f"{num_alpha_convert.Num2Alpha(i)}. {QA[i]}")
-            print(
-                f"答: {num_alpha_convert.Num2Alpha(answer_wiki)}"
-                f" or {num_alpha_convert.Num2Alpha(answer_google)}"
-            )
+            print(f"答: {num_alpha_convert.Num2Alpha(answer_wiki)}" f" or {num_alpha_convert.Num2Alpha(answer_google)}")
             unknown_answer = input("請輸答案: ")
             try:
                 if unknown_answer.isnumeric():

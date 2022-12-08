@@ -11,6 +11,7 @@ from typing import List
 import pandas as pd
 
 import data
+from argument import Argument
 from utils.num_alpha_convert import NumAlphaConvert
 
 
@@ -21,11 +22,12 @@ class QADummy:
     def __str__(self):
         return self._name
 
-    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = Argument().print) -> int:
         """Try to answer the input question
 
         Args:
             QA (List[str]): ["Question", "Option0", "Option1", "Option2", .... , "OptionN"]
+            print_result(bool, optional): print the Question and Answer
 
         Returns:
             int: answer number, range = 1 ~ N (N: total number of option)
@@ -84,7 +86,7 @@ class QADummy:
 
         QA_list: List[list] = [QA_tuple[1].tolist() for QA_tuple in QA_df.iterrows()]  # type: ignore
 
-        num_answer: List[int] = [self.get_answer(single_QA, print_result=True) for single_QA in QA_list]
+        num_answer: List[int] = [self.get_answer(single_QA) for single_QA in QA_list]
         alpha_answer: List[str] = [NumAlphaConvert(num) for num in num_answer]  # type: ignore
 
         log_date = datetime.now().strftime("%Y-%m-%d_%H%M")

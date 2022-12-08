@@ -5,9 +5,11 @@ from fp.fp import FreeProxy
 from magic_google import MagicGoogle
 from magic_google.config import LOGGER
 
+from argument import Argument
 
-class SearchBot(MagicGoogle):  
-    def __init__(self, request_delay: int = 1) -> None:
+
+class SearchBot(MagicGoogle):
+    def __init__(self, request_delay: int = Argument().delay) -> None:
         LOGGER.propagate = False
         self.request_delay = request_delay
         self.proxies = self.get_proxy()

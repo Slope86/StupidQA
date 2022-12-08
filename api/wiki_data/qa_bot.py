@@ -2,6 +2,7 @@ from typing import List
 
 from api.qa_dummy import QADummy
 from api.wiki_data.analyzer import Analyzer
+from argument import Argument
 from utils.line2words import Line2Words
 
 
@@ -11,11 +12,12 @@ class QABot(QADummy):
         self._wiki = Analyzer()
         Line2Words("Initialize")
 
-    def get_answer(self, QA: List[str], print_result: bool = False) -> int:
+    def get_answer(self, QA: List[str], print_result: bool = Argument().print) -> int:
         """Answer the input question based on Wikipedia article
 
         Args:
             QA (List[str]): ["Question", "Option0", "Option1", "Option2", .... , "OptionN"]
+            print_result(bool, optional): print the Question and Answer
 
         Returns:
             int: answer number, range = 1 ~ N (N: total number of option)
