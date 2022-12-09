@@ -3,30 +3,21 @@ import argparse
 
 
 class Argument:
-    """
-    Parse arguments from command line.
+    """A class for handling command line arguments.
 
-    This class uses the `argparse` module to parse arguments passed to the program on the command line.
-    It defines two optional arguments:
+    This class uses the argparse module to parse command line arguments.
+    Uses property methods, 'delay' and 'print', to return the corresponding argument values.
+    Uses singleton to ensure only one instance of ArgumentParser is created.
 
-    - "-d" or "--delay": Set the delay between Google search requests. The default value is 1.
-    - "-np" or "--no-print": Do not print the QA process.
-
-    The parsed arguments are saved as attributes of the class, and can be accessed by other parts of the program.
-
-    This class also uses the Singleton pattern to ensure that only one instance of ArgumentParser is created.
-
-    Example:
-        args = Argument()
-        delay = args.delay
-        should_print = args.print
+    Arguments:
+        -d or --delay: an integer representing the delay between Google search requests, default = 1.
+        -np or --no-print: not print the QA process.
     """
 
     def __new__(cls):
         # Singleton
         if hasattr(cls, "_instance"):
             return cls._instance
-        cls._instance = super().__new__(cls)
 
         # Parse arguments
         parser = argparse.ArgumentParser()
@@ -36,9 +27,14 @@ class Argument:
         parser.add_argument(
             "-np", "--no-print", action="store_false", dest="print", help="Will not print the QA process"
         )
-        args = parser.parse_args()
-
-        # Save arguments as attributes
-        cls.delay: int = args.delay
-        cls.print: bool = args.print
+        cls._args = parser.parse_args()
+        cls._instance = super().__new__(cls)
         return cls._instance
+
+    @property
+    def delay(cls) -> int:
+        return cls._args.delay
+
+    @property
+    def print(cls) -> bool:
+        return cls._args.print
