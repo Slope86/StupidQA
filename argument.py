@@ -14,7 +14,7 @@ class Argument:
         -np or --no-print: not print the QA process.
     """
 
-    def __new__(cls):
+    def __new__(cls, args=None):
         # Singleton
         if hasattr(cls, "_instance"):
             return cls._instance
@@ -27,7 +27,7 @@ class Argument:
         parser.add_argument(
             "-np", "--no-print", action="store_false", dest="print", help="Will not print the QA process"
         )
-        cls._args = parser.parse_args()
+        cls._args = parser.parse_args(args)
         cls._instance = super().__new__(cls)
         return cls._instance
 
