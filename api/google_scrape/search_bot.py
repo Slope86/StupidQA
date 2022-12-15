@@ -14,8 +14,7 @@ class SearchBot(MagicGoogle):
         self.request_delay = request_delay
         self.proxies = self.get_proxy()
 
-    @staticmethod
-    def get_proxy() -> dict[str, str] | None:
+    def get_proxy(self) -> dict[str, str] | None:
         """Get a random proxy from https://free-proxy-list.net/
 
         Returns:
@@ -30,7 +29,7 @@ class SearchBot(MagicGoogle):
             except FreeProxyException:
                 get_proxy_fail_count += 1
                 if get_proxy_fail_count == 3:
-                    input("無法取得代理伺服器, Google QA-Bot可能無法正常運作(按enter鍵繼續)")
+                    self.user_input("無法取得代理伺服器, Google QA-Bot可能無法正常運作(按enter鍵繼續)")
                     return None
                 time.sleep(1)
 
@@ -62,6 +61,9 @@ class SearchBot(MagicGoogle):
                 search_fail_count = 0
                 self.proxies = self.get_proxy()
                 if self.proxies is None:
-                    if input("Google QA-Bot無法取得搜尋結果,是否繼續嘗試? (按Enter繼續/按其他鍵離開): ") != "":
+                    if self.user_input("Google QA-Bot無法取得搜尋結果,是否繼續嘗試? (按Enter繼續/按其他鍵離開): ") != "":
                         raise Exception("Google search error")
         return search_result
+
+    def user_input(self, display: str) -> str:
+        return input(display)
